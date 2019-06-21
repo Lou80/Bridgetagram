@@ -1,6 +1,6 @@
 const baseURL = 'http://localhost:4002';
 
-fetch(`${baseURL}/api/instagram`)
+fetch(`${baseURL}/api/posteos`)
   .then(function (res) {
     return res.json()
   })
@@ -17,30 +17,28 @@ fetch(`${baseURL}/api/instagram`)
        </div>`;
 
        document.querySelector('.post-container').innerHTML += postHTML;
-       console.log(p)
+       
 
        const botonesLike = document.querySelectorAll('.puente');
+       
         for (let index = 0; index < botonesLike.length; index++) {
           const bridge = botonesLike[index];
           bridge.addEventListener('click', function (e) {
-            const idDelPost = e.target.parentNode.id;
-
-          //en este endpoint puedo sumar este like y aclaro la acción específica que voy a editar
-          fetch(`${baseURL}/api/instagram/${idDelPost}/like`, {
-                  method:'put'
-                })
-                //.then (res => res.json())
-                .then (p => {
-                  bridge.innerHTML = `<img src='./png/002-tower-bridge.png'><span> ${p.cantLikes} me gusta</span>`;
-                  console.log(p);
-        
-                })
+            const idDelPost = e.target.parentNode.parentNode.id;
+            //en este endpoint puedo sumar este like y aclaro la acción específica que voy a editar
+            fetch(`${baseURL}/api/posteos/${idDelPost}/like`, {
+              method:'put'
+            })
+            .then (res => res.json())
+            .then (p => {
+              bridge.innerHTML = `<img src='./png/002-tower-bridge.png'><span> ${p.cantLikes} me gusta</span>`;       
+            })
               
           })
         }
-          } )
+    })
 
-    });
+  });
 
 
 
@@ -59,7 +57,7 @@ document.getElementById('nuevo-post').onsubmit = function (e) {
     cantLikes: 0
   }
   
-  fetch(`${baseURL}/api/instagram`, {
+  fetch(`${baseURL}/api/posteos`, {
     method: 'post',
     body: JSON.stringify(posteo),
     //pasa un objeto a un string y puedo volver atrás
@@ -86,12 +84,3 @@ document.getElementById('nuevo-post').onsubmit = function (e) {
       //document.querySelector('ul').innerHTML += nuevoPosteo;
     })
 }
-
-
-      
-
-//agregar boton megusta
-//al boton agrgar el onclick
-//cuando onclick, con fetch pedir al server que agregue u like
-//fetch (dir, {method: put})
-//si salió todo bien, modificamos el dom para ir cambiando el num de likes

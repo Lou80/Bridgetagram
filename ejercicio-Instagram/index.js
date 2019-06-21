@@ -4,7 +4,6 @@ const app = express();
 app.use( cors() );
 app.use( express.json() );
 
-let likes = 0;
 let ID = 3;
 
 const listaDePosteos = [
@@ -22,11 +21,11 @@ const listaDePosteos = [
 
 
 
-app.get('/api/instagram', function (req, res) {
+app.get('/api/posteos', function (req, res) {
     res.json(listaDePosteos)
 });
 
-app.post('/api/instagram', function (req, res) {
+app.post('/api/posteos', function (req, res) {
     const nuevoPosteo = req.body;
     //aqui podríamos agregar una validación para que texto o img no esté vacíos
     nuevoPosteo.id = ID++;
@@ -42,15 +41,18 @@ app.post('/api/instagram', function (req, res) {
 //si encontramos el post, incrementar en 1 la prop likes
 //contestar
 
-app.put('api/instagram/:idDelPost/like', function (req, res) {
+
+//restful apis: es una manera ordenada de llamar a la api api/qué tipo de objetos/id/qué acción específica
+app.put('/api/posteos/:idDelPost/like', function (req, res) {
     const postID = req.params.idDelPost;
-    for (let i = 0; i < listaDePosteos.length; i++) {
+        for (let i = 0; i < listaDePosteos.length; i++) {
         if (listaDePosteos[i].id == postID) {
-            listaDePosteos[i].cantLikes ++;
+            listaDePosteos[i].cantLikes++;
+            return res.json(listaDePosteos[i]); 
+            //en este caso respondo no con la lista si no con el post que modifico, y agrego el return porque así hago q se corte la ejecución de la función
         }
     }
-    //en este caso respondo no con la lista si no con el post que modifico, y agrego el return porque así hago q se corte la ejecución de la función
-    return res.json(post); 
+    
 });
 
 app.listen(4002);
